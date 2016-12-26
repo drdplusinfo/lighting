@@ -15,13 +15,11 @@
     "granam/integer": "dev-master",
     "drd-plus/tools": "dev-master",
     "drd-plus/tables": "dev-master",
-    "drd-plus/rolls-on": "dev-master",
-    "doctrineum/entity": "dev-master"
+    "drd-plus/rolls-on": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.0",
-    "mockery/mockery": "dev-master",
-    "doctrine/orm": "^2.5"
+    "mockery/mockery": "dev-master"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
