@@ -1,17 +1,30 @@
 <?php
 namespace DrdPlus\Lighting;
 
+use Doctrineum\Entity\Entity;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
 use Granam\Strict\Object\StrictObject;
 
-class Glare extends StrictObject
+/**
+ * @Doctrine\ORM\Mapping\Entity()
+ */
+class Glare extends StrictObject implements Entity
 {
     /**
      * @var int
+     * @Doctrine\ORM\Mapping\Id
+     * @Doctrine\ORM\Mapping\GeneratedValue(strategy="AUTO")
+     * @Doctrine\ORM\Mapping\Column(type="integer")
+     */
+    private $id;
+    /**
+     * @var int
+     * @Doctrine\ORM\Mapping\Column(type="integer", name="malus")
      */
     private $malus;
     /**
      * @var bool
+     * @Doctrine\ORM\Mapping\Column(type="boolean", name="shined")
      */
     private $shined;
 
@@ -37,6 +50,14 @@ class Glare extends StrictObject
             $this->malus = $possibleMalus;
         }
         $this->shined = $contrast->isFromDarkToLight(); // otherwise blinded
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
