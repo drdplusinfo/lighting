@@ -1,4 +1,4 @@
-# Insufficient lighting and too bright light effects for DrD+
+# Insufficient lighting and too bright light effects for [DrD+](http://www.altar.cz/drdplus/)
 
 Is your torch enough? Are you not blind by daylight after day in dungeon?
 
