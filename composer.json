@@ -13,7 +13,7 @@
     "roave/security-advisories": "dev-master",
     "granam/strict-object": "dev-master",
     "granam/integer": "dev-master",
-    "drd-plus/tools": "dev-master",
+    "drd-plus/calculations": "dev-master",
     "drd-plus/tables": "dev-master",
     "drd-plus/rolls-on": "dev-master"
   },
