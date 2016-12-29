@@ -21,12 +21,14 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
      * @param Opacity $barrierOpacity
      * @param RaceCode $raceCode
      * @param WithInsufficientLightingBonus $duskSight
+     * @param bool $infravisionCanBeUsed Allows current situation to use infravision?
      */
     public function __construct(
         LightingQuality $currentLightingQuality,
         Opacity $barrierOpacity,
         RaceCode $raceCode,
-        WithInsufficientLightingBonus $duskSight
+        WithInsufficientLightingBonus $duskSight,
+        $infravisionCanBeUsed
     )
     {
         $this->malus = 0;
@@ -43,9 +45,17 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             } else if ($raceCode->getValue() === RaceCode::KROLL) {
                 $possibleMalus += 2; // lowering malus
             }
+            if ($infravisionCanBeUsed && $currentLightingQuality->getValue() <= -90 // like star night
+                && in_array($raceCode->getValue(), [RaceCode::DWARF, RaceCode::ORC], true)
+            ) {
+                /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#Infravidění */
+                $possibleMalus += 3;
+            }
             $possibleMalus += $duskSight->getInsufficientLightingBonus(); // lowering malus
             if ($possibleMalus >= -20) {
-                $this->malus = $possibleMalus;
+                if ($possibleMalus < 0) {
+                    $this->malus = $possibleMalus;
+                }
             } else {
                 $this->malus = -20; // maximal possible malus on absolute dark, see PPH page 128 right column bottom
             }

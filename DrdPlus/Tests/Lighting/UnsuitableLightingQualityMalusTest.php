@@ -17,6 +17,7 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
      * @param int $barrierOpacityValue
      * @param string $raceValue
      * @param int $fromDuskSightBonus
+     * @param bool $infravisionCanBeUsed
      * @param int $expectedMalus
      */
     public function I_get_malus_from_insufficient_light(
@@ -24,6 +25,7 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
         $barrierOpacityValue,
         $raceValue,
         $fromDuskSightBonus,
+        $infravisionCanBeUsed,
         $expectedMalus
     )
     {
@@ -31,7 +33,8 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
             new LightingQuality($lightingQualityValue),
             $this->createOpacity($barrierOpacityValue),
             RaceCode::getIt($raceValue),
-            $this->createDuskSight($fromDuskSightBonus)
+            $this->createDuskSight($fromDuskSightBonus),
+            $infravisionCanBeUsed
         );
         self::assertSame($expectedMalus, $insufficientLightingQualityMalus->getValue());
         self::assertSame((string)$expectedMalus, (string)$insufficientLightingQualityMalus);
@@ -41,27 +44,30 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
     {
         // note: orcs and dwarfs have +4 bonus in darkness, krolls +2 but orcs have -2 malus on bright light
         return [
-            [0, -200, RaceCode::HUMAN, 0, 0],
-            [0, 0, RaceCode::HUMAN, 0, 0],
-            [-10, 0, RaceCode::ELF, 0, 0],
-            [-11, 0, RaceCode::HOBBIT, 0, -1],
-            [-11, 0, RaceCode::HOBBIT, 1, 0],
-            [-19, 0, RaceCode::HUMAN, 0, -1],
-            [-20, 0, RaceCode::HUMAN, 0, -2],
-            [-59, 20, RaceCode::ELF, 0, -7],
-            [-59, 0, RaceCode::KROLL, 0, -3],
-            [-59, 0, RaceCode::ORC, 0, -1],
-            [-59, 0, RaceCode::DWARF, 0, -1],
-            [-100, 0, RaceCode::HOBBIT, 0, -10],
-            [-200, 0, RaceCode::HOBBIT, 0, -20],
-            [-200, 0, RaceCode::ORC, 3, -13],
-            [-999, 0, RaceCode::DWARF, 90, -5],
-            [-999, 0, RaceCode::DWARF, 0, -20], // maximum is -20
-            [60, 0, RaceCode::KROLL, 0, 0],
-            [59, 0, RaceCode::ORC, 0, 0],
-            [60, 0, RaceCode::ORC, 0, -2],
-            [61, 1, RaceCode::ORC, 0, -2],
-            [61, 2, RaceCode::ORC, 0, 0],
+            [0, -200, RaceCode::HUMAN, 0, true, 0],
+            [0, 0, RaceCode::HUMAN, 0, true, 0],
+            [-10, 0, RaceCode::ELF, 0, true, 0],
+            [-11, 0, RaceCode::HOBBIT, 0, true, -1],
+            [-11, 0, RaceCode::HOBBIT, 1, true, 0],
+            [-19, 0, RaceCode::HUMAN, 0, true, -1],
+            [-20, 0, RaceCode::HUMAN, 0, true, -2],
+            [-59, 20, RaceCode::ELF, 0, true, -7],
+            [-59, 0, RaceCode::KROLL, 0, true, -3],
+            [-59, 0, RaceCode::ORC, 0, true, -1],
+            [-59, 0, RaceCode::DWARF, 0, true, -1],
+            [-100, 0, RaceCode::HOBBIT, 0, true, -10],
+            [-200, 0, RaceCode::HOBBIT, 0, false, -20],
+            [-200, 0, RaceCode::ORC, 3, true, -10],
+            [-200, 0, RaceCode::ORC, 3, false, -13],
+            [-999, 0, RaceCode::DWARF, 90, true, -2],
+            [-999, 0, RaceCode::DWARF, 90, false, -5],
+            [-999, 0, RaceCode::DWARF, 0, true, -20 /* maximum is -20 */],
+            [60, 0, RaceCode::KROLL, 0, true, 0],
+            [59, 0, RaceCode::ORC, 0, true, 0],
+            [60, 0, RaceCode::ORC, 0, true, -2],
+            [61, 1, RaceCode::ORC, 0, true, -2],
+            [61, 2, RaceCode::ORC, 0, true, 0],
+            [-999, 0, RaceCode::DWARF, 100000, true, 0 /* malus can not turns to bonus */],
         ];
     }
 

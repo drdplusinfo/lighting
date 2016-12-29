@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Lighting;
 
-use DrdPlus\Tools\Calculations\SumAndRound;
+use DrdPlus\Calculations\SumAndRound;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
