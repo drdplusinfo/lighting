@@ -48,7 +48,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             if ($infravisionCanBeUsed && $currentLightingQuality->getValue() <= -90 // like star night
                 && in_array($raceCode->getValue(), [RaceCode::DWARF, RaceCode::ORC], true)
             ) {
-                /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#Infravidění */
+                /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#infravideni */
                 $possibleMalus += 3;
             }
             $possibleMalus += $duskSight->getInsufficientLightingBonus(); // lowering malus
