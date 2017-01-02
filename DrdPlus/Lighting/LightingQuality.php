@@ -5,6 +5,9 @@ use Granam\Integer\IntegerInterface;
 use Granam\Integer\Tools\ToInteger;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * See PPH page 127 right column, @link https://pph.drdplus.jaroslavtyc.com/#kvalita_osvetleni
+ */
 class LightingQuality extends StrictObject implements Partials\LightingQualityInterface
 {
     /**

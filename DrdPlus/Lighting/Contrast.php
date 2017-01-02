@@ -7,6 +7,9 @@ use DrdPlus\Tables\Races\SightRangesTable;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * see PPH page 128 left column, @link https://pph.drdplus.jaroslavtyc.com/#oslneni
+ */
 class Contrast extends StrictObject implements PositiveInteger
 {
     /**

@@ -7,7 +7,7 @@ use Granam\Integer\NegativeInteger;
 use Granam\Strict\Object\StrictObject;
 
 /**
- * See PPH page 128
+ * See PPH page 128, @link https://pph.drdplus.jaroslavtyc.com/#postihy_za_nedostatecne_svetlo
  */
 class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInteger
 {

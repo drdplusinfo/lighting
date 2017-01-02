@@ -9,6 +9,9 @@ use Granam\Integer\PositiveInteger;
 use Granam\Integer\Tools\ToInteger;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * See PPH page 129 left column, @link https://pph.drdplus.jaroslavtyc.com/#nepruhledne_prostredi
+ */
 class Opacity extends StrictObject implements PositiveInteger
 {
     /**

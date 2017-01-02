@@ -4,6 +4,9 @@ namespace DrdPlus\Lighting;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
 use Granam\Strict\Object\StrictObject;
 
+/**
+ * See PPH page 128 left column, @link https://pph.drdplus.jaroslavtyc.com/#oslneni
+ */
 class Glare extends StrictObject
 {
     /**
