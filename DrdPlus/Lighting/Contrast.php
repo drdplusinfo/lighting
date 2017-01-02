@@ -2,6 +2,8 @@
 namespace DrdPlus\Lighting;
 
 use DrdPlus\Calculations\SumAndRound;
+use DrdPlus\Codes\RaceCode;
+use DrdPlus\Tables\Races\SightRangesTable;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -19,19 +21,49 @@ class Contrast extends StrictObject implements PositiveInteger
     /**
      * @param LightingQuality $previousLightingQuality
      * @param LightingQuality $currentLightingQuality
+     * @return Contrast
      */
-    public function __construct(
+    public static function createBySimplifiedRules(
         LightingQuality $previousLightingQuality,
         LightingQuality $currentLightingQuality
     )
     {
         $difference = $previousLightingQuality->getValue() - $currentLightingQuality->getValue();
-        $this->fromLightToDark = $difference > 0; // if previous light was more intensive than current, then it comes darker
-        // see PPH page 128 left column
-        if ($difference > 0) {
-            $this->value = abs(SumAndRound::floor($difference / 10));
+
+        return new self($difference, 10);
+    }
+
+    /**
+     * @param EyeAdaptation $adaptationOfEye
+     * @param LightingQuality $currentLightingQuality
+     * @param RaceCode $raceCode
+     * @param SightRangesTable $sightRangesTable
+     * @return Contrast
+     */
+    public static function createByExtendedRules(
+        EyeAdaptation $adaptationOfEye,
+        LightingQuality $currentLightingQuality,
+        RaceCode $raceCode,
+        SightRangesTable $sightRangesTable
+    )
+    {
+        $difference = $adaptationOfEye->getValue() - $currentLightingQuality->getValue();
+
+        return new self($difference, $sightRangesTable->getAdaptability($raceCode));
+    }
+
+    /**
+     * @param int $lightsDifference
+     * @param int $eyeAdaptability
+     */
+    private function __construct($lightsDifference, $eyeAdaptability)
+    {
+        $this->fromLightToDark = $lightsDifference > 0;
+        /** see PPH page 128 left column, @link https://pph.drdplus.jaroslavtyc.com/#oslneni */
+        if ($this->fromLightToDark) {
+            $this->value = SumAndRound::floor($lightsDifference / $eyeAdaptability);
         } else {
-            $this->value = abs(SumAndRound::ceil($difference / 10));
+            $this->value = SumAndRound::ceil(abs($lightsDifference) / $eyeAdaptability);
         }
     }
 
@@ -48,7 +80,14 @@ class Contrast extends StrictObject implements PositiveInteger
      */
     public function __toString()
     {
-        return (string)$this->getValue() . ($this->isFromLightToDark() ? ' (to dark)' : ' (to light)');
+        $asString = (string)$this->getValue();
+        if ($this->isFromLightToDark()) {
+            $asString .= ' (to dark)';
+        } else if ($this->isFromDarkToLight()) {
+            $asString .= ' (to light)';
+        }
+
+        return $asString;
     }
 
     /**
@@ -64,6 +103,6 @@ class Contrast extends StrictObject implements PositiveInteger
      */
     public function isFromDarkToLight()
     {
-        return !$this->isFromLightToDark();
+        return !$this->isFromLightToDark() && $this->getValue() !== 0;
     }
 }

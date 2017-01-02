@@ -2,6 +2,7 @@
 namespace DrdPlus\Health\LightInflictions;
 
 use DrdPlus\Lighting\LightingQuality;
+use DrdPlus\Lighting\Partials\LightingQualityInterface;
 
 class LightingQualityTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,5 +14,6 @@ class LightingQualityTest extends \PHPUnit_Framework_TestCase
         $lightingQuality = new LightingQuality(-123);
         self::assertSame(-123, $lightingQuality->getValue());
         self::assertSame('-123', (string)$lightingQuality);
+        self::assertInstanceOf(LightingQualityInterface::class, $lightingQuality);
     }
 }

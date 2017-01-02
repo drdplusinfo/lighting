@@ -5,7 +5,7 @@ use Granam\Integer\IntegerInterface;
 use Granam\Integer\Tools\ToInteger;
 use Granam\Strict\Object\StrictObject;
 
-class LightingQuality extends StrictObject implements IntegerInterface
+class LightingQuality extends StrictObject implements Partials\LightingQualityInterface
 {
     /**
      * @var int

@@ -38,7 +38,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         }
         if ($currentLightingQuality->getValue() < -10) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-            $contrast = new Contrast(new LightingQuality(0), $currentLightingQuality);
+            $contrast = Contrast::createBySimplifiedRules(new LightingQuality(0), $currentLightingQuality);
             $possibleMalus = -$contrast->getValue();
             if (in_array($raceCode->getValue(), [RaceCode::DWARF, RaceCode::ORC], true)) {
                 $possibleMalus += 4; // lowering malus
