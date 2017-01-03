@@ -11,7 +11,7 @@ use Granam\Strict\Object\StrictObject;
 /**
  * See PPH page 130 right column, @link https://pph.drdplus.jaroslavtyc.com/#rozsirujici_pravidla_pro_videni
  */
-class EyeAdaptation extends StrictObject implements LightingQualityInterface
+class EyesAdaptation extends StrictObject implements LightingQualityInterface
 {
     /**
      * @var int

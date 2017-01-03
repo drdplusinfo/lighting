@@ -31,12 +31,12 @@ class Opacity extends StrictObject implements PositiveInteger
         AmountTable $amountTable
     )
     {
-        return new self(
-            (new AmountBonus(
-                $barrierDensity->getValue() + $barrierLength->getBonus()->getValue(),
-                $amountTable
-            ))->getAmount()->getValue()
-        );
+        $amountBonusValue = $barrierDensity->getValue() + $barrierLength->getBonus()->getValue();
+        if ($amountBonusValue < -20) { // workaround to avoid unexpected amount bonus value
+            return static::createTransparent();
+        }
+
+        return new self((new AmountBonus($amountBonusValue, $amountTable))->getAmount()->getValue());
     }
 
     /**

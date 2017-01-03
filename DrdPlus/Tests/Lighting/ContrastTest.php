@@ -3,7 +3,7 @@ namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Lighting\Contrast;
-use DrdPlus\Lighting\EyeAdaptation;
+use DrdPlus\Lighting\EyesAdaptation;
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Tables\Races\SightRangesTable;
 use Granam\Tests\Tools\TestWithMockery;
@@ -39,9 +39,9 @@ class ContrastTest extends TestWithMockery
     public function providePreviousAndCurrentLightIntensity()
     {
         return [
-            [-123, 345, 47], // negative, rounded up (removed decimals)
-            [678, 1, 67], // positive, rounded down (removed decimals)
-            [-5, -5, 0], // same
+            [-123, 345, 46],
+            [678, 1, 67],
+            [-5, -5, 0], // same values = no diff
         ];
     }
 
@@ -77,21 +77,21 @@ class ContrastTest extends TestWithMockery
     public function provideAdaptationCurrentLightIntensityAndAdaptability()
     {
         return [
-            [-123, 345, 10, 47], // from dark to light, rounded up
-            [-123, 345, 5, 94], // from dark to light, rounded up
-            [678, 1, 10, 67], // from light to dark, rounded down
-            [678, 1, 11, 61], // from light to dark, rounded down
-            [55, 55, 123, 0], // same
+            [-123, 345, 10, 46],
+            [-123, 345, 5, 93],
+            [678, 1, 10, 67],
+            [678, 1, 11, 61],
+            [55, 55, 123, 0], // same values = no diff
         ];
     }
 
     /**
      * @param $value
-     * @return \Mockery\MockInterface|EyeAdaptation
+     * @return \Mockery\MockInterface|EyesAdaptation
      */
     private function createEyeAdaptation($value)
     {
-        $eyeAdaptation = $this->mockery(EyeAdaptation::class);
+        $eyeAdaptation = $this->mockery(EyesAdaptation::class);
         $eyeAdaptation->shouldReceive('getValue')
             ->andReturn($value);
 

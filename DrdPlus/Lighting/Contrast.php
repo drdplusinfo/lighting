@@ -37,20 +37,20 @@ class Contrast extends StrictObject implements PositiveInteger
     }
 
     /**
-     * @param EyeAdaptation $adaptationOfEye
+     * @param EyesAdaptation $eyesAdaptation
      * @param LightingQuality $currentLightingQuality
      * @param RaceCode $raceCode
      * @param SightRangesTable $sightRangesTable
      * @return Contrast
      */
     public static function createByExtendedRules(
-        EyeAdaptation $adaptationOfEye,
+        EyesAdaptation $eyesAdaptation,
         LightingQuality $currentLightingQuality,
         RaceCode $raceCode,
         SightRangesTable $sightRangesTable
     )
     {
-        $difference = $adaptationOfEye->getValue() - $currentLightingQuality->getValue();
+        $difference = $eyesAdaptation->getValue() - $currentLightingQuality->getValue();
 
         return new self($difference, $sightRangesTable->getAdaptability($raceCode));
     }
@@ -62,12 +62,9 @@ class Contrast extends StrictObject implements PositiveInteger
     private function __construct($lightsDifference, $eyeAdaptability)
     {
         $this->fromLightToDark = $lightsDifference > 0;
+        $base = abs($lightsDifference) / $eyeAdaptability;
         /** see PPH page 128 left column, @link https://pph.drdplus.jaroslavtyc.com/#oslneni */
-        if ($this->fromLightToDark) {
-            $this->value = SumAndRound::floor($lightsDifference / $eyeAdaptability);
-        } else {
-            $this->value = SumAndRound::ceil(abs($lightsDifference) / $eyeAdaptability);
-        }
+        $this->value = SumAndRound::floor($base);
     }
 
     /**
@@ -88,7 +85,7 @@ class Contrast extends StrictObject implements PositiveInteger
             $asString .= ' (to dark)';
         } else if ($this->isFromDarkToLight()) {
             $asString .= ' (to light)';
-        }
+        } // else nothing if contrast is zero
 
         return $asString;
     }

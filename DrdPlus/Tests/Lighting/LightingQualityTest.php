@@ -1,5 +1,5 @@
 <?php
-namespace DrdPlus\Health\LightInflictions;
+namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Lighting\Partials\LightingQualityInterface;

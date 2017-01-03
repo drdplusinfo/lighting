@@ -2,7 +2,10 @@
 namespace DrdPlus\Lighting;
 
 use DrdPlus\Codes\RaceCode;
+use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Lighting\Partials\WithInsufficientLightingBonus;
+use DrdPlus\Tables\Races\RacesTable;
+use DrdPlus\Tables\Races\SightRangesTable;
 use Granam\Integer\NegativeInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -17,25 +20,73 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
     private $malus;
 
     /**
+     * @param EyesAdaptation $eyesAdaptation
      * @param LightingQuality $currentLightingQuality
      * @param Opacity $barrierOpacity
+     * @param WithInsufficientLightingBonus $duskSightBonus
      * @param RaceCode $raceCode
-     * @param WithInsufficientLightingBonus $duskSight
-     * @param bool $infravisionCanBeUsed Allows current situation to use infravision?
+     * @param SubRaceCode $subRaceCode
+     * @param SightRangesTable $sightRangesTable
+     * @param RacesTable $racesTable
+     * @param $situationAllowsUseOfInfravision
+     * @return UnsuitableLightingQualityMalus
      */
-    public function __construct(
+    public static function createWithEyesAdaptation(
+        EyesAdaptation $eyesAdaptation,
         LightingQuality $currentLightingQuality,
         Opacity $barrierOpacity,
+        WithInsufficientLightingBonus $duskSightBonus,
         RaceCode $raceCode,
-        WithInsufficientLightingBonus $duskSight,
-        $infravisionCanBeUsed
+        SubRaceCode $subRaceCode,
+        SightRangesTable $sightRangesTable,
+        RacesTable $racesTable,
+        $situationAllowsUseOfInfravision
     )
     {
-        $this->malus = 0;
         if ($barrierOpacity->getValue() > 0) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
         }
+        $contrast = Contrast::createByExtendedRules($eyesAdaptation, $currentLightingQuality, $raceCode, $sightRangesTable);
+        $possibleBaseMalus = -$contrast->getValue();
+
+        return new self(
+            $possibleBaseMalus,
+            $currentLightingQuality,
+            $duskSightBonus,
+            $situationAllowsUseOfInfravision,
+            $raceCode,
+            $subRaceCode,
+            $racesTable
+        );
+    }
+
+    /**
+     * @param LightingQuality $currentLightingQuality
+     * @param WithInsufficientLightingBonus $duskSightBonus
+     * @param Opacity $barrierOpacity
+     * @param RaceCode $raceCode
+     * @param SubRaceCode $subRaceCode
+     * @param RacesTable $racesTable
+     * @param $situationAllowsUseOfInfravision
+     * @return UnsuitableLightingQualityMalus
+     */
+    public static function createWithSimplifiedRules(
+        LightingQuality $currentLightingQuality,
+        Opacity $barrierOpacity,
+        WithInsufficientLightingBonus $duskSightBonus,
+        RaceCode $raceCode,
+        SubRaceCode $subRaceCode,
+        RacesTable $racesTable,
+        $situationAllowsUseOfInfravision
+    )
+    {
+        $possibleMalus = 0;
+        if ($barrierOpacity->getValue() > 0) {
+            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
+            $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
+        }
+        /** see PPH page 128 right column bottom, @link https://pph.drdplus.jaroslavtyc.com/#postihy_za_nedostatecne_svetlo */
         if ($currentLightingQuality->getValue() < -10) {
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $contrast = Contrast::createBySimplifiedRules(new LightingQuality(0), $currentLightingQuality);
@@ -45,23 +96,59 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             } else if ($raceCode->getValue() === RaceCode::KROLL) {
                 $possibleMalus += 2; // lowering malus
             }
-            if ($infravisionCanBeUsed && $currentLightingQuality->getValue() <= -90 // like star night
-                && in_array($raceCode->getValue(), [RaceCode::DWARF, RaceCode::ORC], true)
-            ) {
-                /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#infravideni */
-                $possibleMalus += 3;
-            }
-            $possibleMalus += $duskSight->getInsufficientLightingBonus(); // lowering malus
-            if ($possibleMalus >= -20) {
-                if ($possibleMalus < 0) {
-                    $this->malus = $possibleMalus;
-                }
-            } else {
-                $this->malus = -20; // maximal possible malus on absolute dark, see PPH page 128 right column bottom
-            }
         } else if ($currentLightingQuality->getValue() >= 60 /* strong daylight */ && $raceCode->getValue() === RaceCode::ORC) {
-            // see PPH page 128 right column bottom
-            $this->malus = -2;
+            /** see PPH page 128 right column bottom, @link https://pph.drdplus.jaroslavtyc.com/#postih_skretu_za_ostreho_denniho_svetla */
+            $possibleMalus = -2;
+        }
+
+        return new self(
+            $possibleMalus,
+            $currentLightingQuality,
+            $duskSightBonus,
+            $situationAllowsUseOfInfravision,
+            $raceCode,
+            $subRaceCode,
+            $racesTable
+        );
+    }
+
+    /**
+     * @param $possibleBaseMalus
+     * @param LightingQuality $currentLightingQuality
+     * @param WithInsufficientLightingBonus $duskSightBonus
+     * @param $situationAllowsUseOfInfravision
+     * @param RaceCode $raceCode
+     * @param SubRaceCode $subRaceCode
+     * @param RacesTable $racesTable
+     */
+    private function __construct(
+        $possibleBaseMalus,
+        LightingQuality $currentLightingQuality,
+        WithInsufficientLightingBonus $duskSightBonus,
+        $situationAllowsUseOfInfravision,
+        RaceCode $raceCode,
+        SubRaceCode $subRaceCode,
+        RacesTable $racesTable
+    )
+    {
+        $possibleMalus = $possibleBaseMalus;
+        if ($currentLightingQuality->getValue() < 0) {
+            $possibleMalus += $duskSightBonus->getInsufficientLightingBonus(); // lowering malus
+        }
+        if ($situationAllowsUseOfInfravision && $currentLightingQuality->getValue() <= -90 // like star night
+            && $racesTable->hasInfravision($raceCode, $subRaceCode)
+        ) {
+            /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#infravideni */
+            $possibleMalus += 3;
+        }
+        $this->malus = 0;
+        if ($possibleMalus >= -20) {
+            if ($possibleMalus < 0) {
+                $this->malus = $possibleMalus;
+            } // otherwise zero (malus can not be positive)
+        } else {
+            /** maximal possible malus on absolute dark, see PPH page 128 right column bottom, @link https://pph.drdplus.jaroslavtyc.com/#postih_za_uplnou_tmu */
+            $this->malus = -20;
         }
     }
 

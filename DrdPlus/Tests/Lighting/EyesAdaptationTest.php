@@ -2,14 +2,14 @@
 namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Codes\RaceCode;
-use DrdPlus\Lighting\EyeAdaptation;
+use DrdPlus\Lighting\EyesAdaptation;
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Lighting\Partials\LightingQualityInterface;
 use DrdPlus\Tables\Races\SightRangesTable;
 use Granam\Integer\PositiveIntegerObject;
 use Granam\Tests\Tools\TestWithMockery;
 
-class EyeAdaptationTest extends TestWithMockery
+class EyesAdaptationTest extends TestWithMockery
 {
     /**
      * @test
@@ -30,7 +30,7 @@ class EyeAdaptationTest extends TestWithMockery
         $expectedEyeAdaptation
     )
     {
-        $eyeAdaptation = new EyeAdaptation(
+        $eyeAdaptation = new EyesAdaptation(
             $this->createLightingQuality($previousLightingQuality),
             $this->createLightingQuality($currentLightingQuality),
             $raceCode = $this->createRaceCode(),
