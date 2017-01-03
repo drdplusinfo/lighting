@@ -177,7 +177,16 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
         // hasInfravision, situationAllowsUseOfInfravision, expectedMalus
         return [
             /**
-             * For contrast 80 o bright light example see PPH page 130 right column, @link https://pph.drdplus.jaroslavtyc.com/#postihy_pri_extremne_ostrem_magickem_svetle
+             * For absolute darkness example see PPH page 130 right column, @link https://pph.drdplus.jaroslavtyc.com/#postihy_pri_uplne_tme
+             */
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::HUMAN)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::HUMAN)), 0, RaceCode::HUMAN, 0, false, true, -20],
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::HOBBIT)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::HOBBIT)), 0, RaceCode::HOBBIT, 0, false, true, -20],
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::ELF)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::ELF)), 0, RaceCode::ELF, 0, false, true, -20],
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::KROLL)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::KROLL)), 0, RaceCode::KROLL, 0, false, true, -20],
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::DWARF)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::DWARF)), 0, RaceCode::DWARF, 0, true, true, -20],
+            [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::ORC)), -200, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::ORC)), 0, RaceCode::ORC, 0, true, true, -20],
+            /**
+             * For contrast 80 of bright light example see PPH page 130 right column, @link https://pph.drdplus.jaroslavtyc.com/#postihy_pri_extremne_ostrem_magickem_svetle
              * note: there is an error in the example - dwarf should has malus -3 instead of -4 for contrast 80 ((80-50) / 8 = 3.75 rounded down = 3)
              */
             [$sightRangesTable->getMaximalLighting(RaceCode::getIt(RaceCode::HUMAN)), 80, $sightRangesTable->getAdaptability(RaceCode::getIt(RaceCode::HUMAN)), 0, RaceCode::HUMAN, 0, false, true, -2],
