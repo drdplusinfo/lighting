@@ -72,6 +72,8 @@ class GlareTest extends TestWithMockery
     }
 
     /**
+     * Just an explicit test of a note about glare starting from lighting difference of twenty,
+     * see PPH page 128 left column bottom, @link https://pph.drdplus.jaroslavtyc.com/#oslneni_az_pri_zmene_alespon
      * @test
      */
     public function I_am_not_affected_if_contrast_is_just_one()
