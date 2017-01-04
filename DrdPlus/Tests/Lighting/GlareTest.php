@@ -70,4 +70,17 @@ class GlareTest extends TestWithMockery
 
         return $contrast;
     }
+
+    /**
+     * @test
+     */
+    public function I_am_not_affected_if_contrast_is_just_one()
+    {
+        $glare = new Glare(
+            $this->createContrast(1, true /* from dark to light - does not affect anything here */),
+            $this->createRollOnSenses(0 /* just lesser than contrast */),
+            false /* not prepared */
+        );
+        self::assertSame(0, $glare->getMalus());
+    }
 }
