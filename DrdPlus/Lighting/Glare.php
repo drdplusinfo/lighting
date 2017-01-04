@@ -57,7 +57,7 @@ class Glare extends StrictObject
      */
     public function isShined()
     {
-        return $this->shined;
+        return $this->shined && $this->getMalus() !== 0;
     }
 
     /**
@@ -65,6 +65,6 @@ class Glare extends StrictObject
      */
     public function isBlinded()
     {
-        return !$this->isShined();
+        return !$this->isShined() && $this->getMalus() !== 0;
     }
 }

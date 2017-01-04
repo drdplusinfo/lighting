@@ -21,8 +21,8 @@ class GlareTest extends TestWithMockery
     {
         $glare = new Glare($this->createContrast($contrastValue, $fromDarkToLight), $this->createRollOnSenses($rollOnSensesValue), $wasPrepared);
         self::assertSame($expectedMalus, $glare->getMalus());
-        self::assertSame($fromDarkToLight, $glare->isShined());
-        self::assertSame(!$fromDarkToLight, $glare->isBlinded());
+        self::assertSame($expectedMalus !== 0 && $fromDarkToLight, $glare->isShined());
+        self::assertSame($expectedMalus !== 0 && !$fromDarkToLight, $glare->isBlinded());
     }
 
     public function provideContrastRollOnSensesAndMalus()
