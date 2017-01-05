@@ -39,8 +39,8 @@ class ContrastTest extends TestWithMockery
     public function providePreviousAndCurrentLightIntensity()
     {
         return [
-            [-123, 345, 46],
-            [678, 1, 67],
+            [-123, 345, 47],
+            [678, 1, 68],
             [-5, -5, 0], // same values = no diff
         ];
     }
@@ -77,10 +77,10 @@ class ContrastTest extends TestWithMockery
     public function provideAdaptationCurrentLightIntensityAndAdaptability()
     {
         return [
-            [-123, 345, 10, 46],
-            [-123, 345, 5, 93],
-            [678, 1, 10, 67],
-            [678, 1, 11, 61],
+            [-123, 345, 10, 47],
+            [-123, 345, 5, 94],
+            [678, 1, 10, 68],
+            [678, 1, 11, 62],
             [55, 55, 123, 0], // same values = no diff
         ];
     }
