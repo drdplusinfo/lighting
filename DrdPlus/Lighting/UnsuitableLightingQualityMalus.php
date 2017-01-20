@@ -4,8 +4,7 @@ namespace DrdPlus\Lighting;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Codes\SubRaceCode;
 use DrdPlus\Lighting\Partials\WithInsufficientLightingBonus;
-use DrdPlus\Tables\Races\RacesTable;
-use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\NegativeInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -26,8 +25,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
      * @param WithInsufficientLightingBonus $duskSightBonus
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
-     * @param SightRangesTable $sightRangesTable
-     * @param RacesTable $racesTable
+     * @param Tables $tables
      * @param $situationAllowsUseOfInfravision
      * @return UnsuitableLightingQualityMalus
      */
@@ -38,8 +36,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         WithInsufficientLightingBonus $duskSightBonus,
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
-        SightRangesTable $sightRangesTable,
-        RacesTable $racesTable,
+        Tables $tables,
         $situationAllowsUseOfInfravision
     )
     {
@@ -47,7 +44,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
         }
-        $contrast = Contrast::createByExtendedRules($eyesAdaptation, $currentLightingQuality, $raceCode, $sightRangesTable);
+        $contrast = Contrast::createByExtendedRules($eyesAdaptation, $currentLightingQuality, $raceCode, $tables);
         $possibleBaseMalus = -$contrast->getValue();
 
         return new self(
@@ -57,7 +54,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             $situationAllowsUseOfInfravision,
             $raceCode,
             $subRaceCode,
-            $racesTable
+            $tables
         );
     }
 
@@ -67,7 +64,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
      * @param Opacity $barrierOpacity
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
-     * @param RacesTable $racesTable
+     * @param Tables $tables
      * @param $situationAllowsUseOfInfravision
      * @return UnsuitableLightingQualityMalus
      */
@@ -77,7 +74,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         WithInsufficientLightingBonus $duskSightBonus,
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
-        RacesTable $racesTable,
+        Tables $tables,
         $situationAllowsUseOfInfravision
     )
     {
@@ -108,7 +105,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             $situationAllowsUseOfInfravision,
             $raceCode,
             $subRaceCode,
-            $racesTable
+            $tables
         );
     }
 
@@ -119,7 +116,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
      * @param $situationAllowsUseOfInfravision
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
-     * @param RacesTable $racesTable
+     * @param Tables $tables
      */
     private function __construct(
         $possibleBaseMalus,
@@ -128,7 +125,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         $situationAllowsUseOfInfravision,
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
-        RacesTable $racesTable
+        Tables $tables
     )
     {
         $possibleMalus = $possibleBaseMalus;
@@ -136,7 +133,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
             $possibleMalus += $duskSightBonus->getInsufficientLightingBonus(); // lowering malus
         }
         if ($situationAllowsUseOfInfravision && $currentLightingQuality->getValue() <= -90 // like star night
-            && $racesTable->hasInfravision($raceCode, $subRaceCode)
+            && $tables->getRacesTable()->hasInfravision($raceCode, $subRaceCode)
         ) {
             /** lowering malus by infravision, see PPH page 129 right column, @link https://pph.drdplus.jaroslavtyc.com/#infravideni */
             $possibleMalus += 3;

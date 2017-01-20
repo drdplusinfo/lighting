@@ -4,7 +4,7 @@ namespace DrdPlus\Lighting;
 use DrdPlus\Calculations\SumAndRound;
 use DrdPlus\Codes\RaceCode;
 use DrdPlus\Lighting\Partials\LightingQualityInterface;
-use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -22,14 +22,14 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
      * @param LightingQuality $previousLightingQuality
      * @param LightingQuality $currentLightingQuality
      * @param RaceCode $raceCode
-     * @param SightRangesTable $sightRangesTable
+     * @param Tables $tables
      * @param PositiveInteger $roundsOfAdaptation
      */
     public function __construct(
         LightingQuality $previousLightingQuality,
         LightingQuality $currentLightingQuality,
         RaceCode $raceCode,
-        SightRangesTable $sightRangesTable,
+        Tables $tables,
         PositiveInteger $roundsOfAdaptation
     )
     {
@@ -37,7 +37,7 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
             $previousLightingQuality,
             $currentLightingQuality,
             $raceCode,
-            $sightRangesTable,
+            $tables,
             $roundsOfAdaptation
         );
     }
@@ -46,7 +46,7 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
      * @param LightingQuality $previousLightingQuality
      * @param LightingQuality $currentLightingQuality
      * @param RaceCode $raceCode
-     * @param SightRangesTable $sightRangesTable
+     * @param Tables $tables
      * @param PositiveInteger $roundsOfAdaptation how much time did you have to get used to current lighting
      * @return int
      */
@@ -54,10 +54,11 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
         LightingQuality $previousLightingQuality,
         LightingQuality $currentLightingQuality,
         RaceCode $raceCode,
-        SightRangesTable $sightRangesTable,
+        Tables $tables,
         PositiveInteger $roundsOfAdaptation
     )
     {
+        $sightRangesTable = $tables->getSightRangesTable();
         $maximalLighting = $sightRangesTable->getMaximalLighting($raceCode);
         $minimalLighting = $sightRangesTable->getMinimalLighting($raceCode);
         $previousLighting = $previousLightingQuality->getValue();

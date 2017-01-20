@@ -2,8 +2,8 @@
 namespace DrdPlus\Lighting;
 
 use DrdPlus\Tables\Measurements\Amount\AmountBonus;
-use DrdPlus\Tables\Measurements\Amount\AmountTable;
 use DrdPlus\Tables\Measurements\Distance\Distance;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerInterface;
 use Granam\Integer\PositiveInteger;
 use Granam\Integer\Tools\ToInteger;
@@ -22,13 +22,13 @@ class Opacity extends StrictObject implements PositiveInteger
     /**
      * @param IntegerInterface $barrierDensity
      * @param Distance $barrierLength
-     * @param AmountTable $amountTable
+     * @param Tables $tables
      * @return Opacity
      */
     public static function createFromBarrierDensity(
         IntegerInterface $barrierDensity,
         Distance $barrierLength,
-        AmountTable $amountTable
+        Tables $tables
     )
     {
         $amountBonusValue = $barrierDensity->getValue() + $barrierLength->getBonus()->getValue();
@@ -36,7 +36,7 @@ class Opacity extends StrictObject implements PositiveInteger
             return static::createTransparent();
         }
 
-        return new self((new AmountBonus($amountBonusValue, $amountTable))->getAmount()->getValue());
+        return new self((new AmountBonus($amountBonusValue, $tables->getAmountTable()))->getAmount()->getValue());
     }
 
     /**

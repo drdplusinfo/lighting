@@ -6,6 +6,7 @@ use DrdPlus\Lighting\Contrast;
 use DrdPlus\Lighting\EyesAdaptation;
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 class ContrastTest extends TestWithMockery
@@ -59,7 +60,7 @@ class ContrastTest extends TestWithMockery
             $this->createEyeAdaptation($eyeAdaptationValue),
             new LightingQuality($currentLightIntensityValue),
             $raceCode = $this->createRaceCode(),
-            $this->createSightRangesTable($raceCode, $adaptability)
+            $this->createTablesWithSightRangesTable($raceCode, $adaptability)
         );
         self::assertSame($expectedContrast, $contrast->getValue());
         $asString = (string)$expectedContrast;
@@ -109,15 +110,17 @@ class ContrastTest extends TestWithMockery
     /**
      * @param RaceCode $raceCode
      * @param $adaptability
-     * @return \Mockery\MockInterface|SightRangesTable
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createSightRangesTable(RaceCode $raceCode, $adaptability)
+    private function createTablesWithSightRangesTable(RaceCode $raceCode, $adaptability)
     {
-        $sightRangesTable = $this->mockery(SightRangesTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getSightRangesTable')
+            ->andReturn($sightRangesTable = $this->mockery(SightRangesTable::class));
         $sightRangesTable->shouldReceive('getAdaptability')
             ->with($raceCode)
             ->andReturn($adaptability);
 
-        return $sightRangesTable;
+        return $tables;
     }
 }

@@ -6,6 +6,7 @@ use DrdPlus\Lighting\EyesAdaptation;
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Lighting\Partials\LightingQualityInterface;
 use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\PositiveIntegerObject;
 use Granam\Tests\Tools\TestWithMockery;
 
@@ -34,7 +35,7 @@ class EyesAdaptationTest extends TestWithMockery
             $this->createLightingQuality($previousLightingQuality),
             $this->createLightingQuality($currentLightingQuality),
             $raceCode = $this->createRaceCode(),
-            $this->createSightRangesTable($maximalLightingForRace, $minimalLightingForRace, $raceCode),
+            $this->createTablesWithSightRangesTable($maximalLightingForRace, $minimalLightingForRace, $raceCode),
             new PositiveIntegerObject($roundsOfAdaptation)
         );
         self::assertSame($expectedEyeAdaptation, $eyeAdaptation->getValue());
@@ -78,15 +79,17 @@ class EyesAdaptationTest extends TestWithMockery
      * @param $maximalLightingForRace
      * @param $minimalLightingForRace
      * @param RaceCode $raceCode
-     * @return \Mockery\MockInterface|SightRangesTable
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createSightRangesTable(
+    private function createTablesWithSightRangesTable(
         $maximalLightingForRace,
         $minimalLightingForRace,
         RaceCode $raceCode
     )
     {
-        $sightRangesTable = $this->mockery(SightRangesTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getSightRangesTable')
+            ->andReturn($sightRangesTable = $this->mockery(SightRangesTable::class));
         $sightRangesTable->shouldReceive('getMaximalLighting')
             ->with($raceCode)
             ->andReturn($maximalLightingForRace);
@@ -94,6 +97,6 @@ class EyesAdaptationTest extends TestWithMockery
             ->with($raceCode)
             ->andReturn($minimalLightingForRace);
 
-        return $sightRangesTable;
+        return $tables;
     }
 }

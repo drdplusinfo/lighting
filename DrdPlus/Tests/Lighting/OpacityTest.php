@@ -7,6 +7,7 @@ use DrdPlus\Tables\Measurements\Amount\AmountBonus;
 use DrdPlus\Tables\Measurements\Amount\AmountTable;
 use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerObject;
 use Granam\Tests\Tools\TestWithMockery;
 
@@ -24,7 +25,7 @@ class OpacityTest extends TestWithMockery
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject($density),
             new Distance($distanceInMeters, Distance::M, new DistanceTable()),
-            new AmountTable()
+            Tables::getIt()
         );
         self::assertSame($expectedOpacity, $opacity->getValue());
         self::assertSame((string)$expectedOpacity, (string)$opacity);
@@ -58,7 +59,7 @@ class OpacityTest extends TestWithMockery
             $opacity = Opacity::createFromBarrierDensity(
                 new IntegerObject(-10),
                 new Distance(1, Distance::M, new DistanceTable()),
-                new AmountTable()
+                Tables::getIt()
             );
             if ($opacity->getValue() === 0) {
                 self::assertSame(0, $opacity->getValue());
@@ -77,13 +78,13 @@ class OpacityTest extends TestWithMockery
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject(-80),
             new Distance(10, Distance::M, new DistanceTable()),
-            new AmountTable()
+            Tables::getIt()
         );
         self::assertSame(0, $opacity->getValue());
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject(-21),
             new Distance(0.1, Distance::M, new DistanceTable()),
-            new AmountTable()
+            Tables::getIt()
         );
         self::assertSame(0, $opacity->getValue());
     }
@@ -96,16 +97,10 @@ class OpacityTest extends TestWithMockery
         $transparentOpacity = Opacity::createTransparent();
         self::assertSame(0, $transparentOpacity->getVisibilityMalus());
 
-        /** @var \Mockery\MockInterface|AmountTable $cheatingAmountTable */
-        $cheatingAmountTable = $this->mockery(AmountTable::class);
-        $cheatingAmountTable->shouldReceive('toAmount')
-            ->with($this->type(AmountBonus::class))
-            ->andReturn(new Amount(-1, Amount::AMOUNT, new AmountTable()));
-
         $negativeOpacity = Opacity::createFromBarrierDensity(
             new IntegerObject(123),
             new Distance(1, Distance::M, new DistanceTable()),
-            $cheatingAmountTable
+            $this->createTablesWithAmountTable(-1)
         );
         self::assertLessThan(0, $negativeOpacity->getValue());
         self::assertSame(0, $negativeOpacity->getVisibilityMalus(), 'Zero malus expected for negative opacity');
@@ -113,9 +108,25 @@ class OpacityTest extends TestWithMockery
         $positiveOpacity = Opacity::createFromBarrierDensity(
             new IntegerObject(10),
             new Distance(5, Distance::M, new DistanceTable()),
-            new AmountTable()
+            Tables::getIt()
         );
         self::assertGreaterThan(0, $positiveOpacity->getValue());
         self::assertSame(-16, $positiveOpacity->getVisibilityMalus());
+    }
+
+    /**
+     * @param $bonusToValue
+     * @return \Mockery\MockInterface|Tables
+     */
+    private function createTablesWithAmountTable($bonusToValue)
+    {
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getAmountTable')
+            ->andReturn($cheatingAmountTable = $this->mockery(AmountTable::class));
+        $cheatingAmountTable->shouldReceive('toAmount')
+            ->with($this->type(AmountBonus::class))
+            ->andReturn(new Amount($bonusToValue, Amount::AMOUNT, new AmountTable()));
+
+        return $tables;
     }
 }

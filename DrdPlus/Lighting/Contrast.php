@@ -3,7 +3,7 @@ namespace DrdPlus\Lighting;
 
 use DrdPlus\Calculations\SumAndRound;
 use DrdPlus\Codes\RaceCode;
-use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Integer\PositiveInteger;
 use Granam\Strict\Object\StrictObject;
 
@@ -40,19 +40,19 @@ class Contrast extends StrictObject implements PositiveInteger
      * @param EyesAdaptation $eyesAdaptation
      * @param LightingQuality $currentLightingQuality
      * @param RaceCode $raceCode
-     * @param SightRangesTable $sightRangesTable
+     * @param Tables $tables
      * @return Contrast
      */
     public static function createByExtendedRules(
         EyesAdaptation $eyesAdaptation,
         LightingQuality $currentLightingQuality,
         RaceCode $raceCode,
-        SightRangesTable $sightRangesTable
+        Tables $tables
     )
     {
         $difference = $eyesAdaptation->getValue() - $currentLightingQuality->getValue();
 
-        return new self($difference, $sightRangesTable->getAdaptability($raceCode), false);
+        return new self($difference, $tables->getSightRangesTable()->getAdaptability($raceCode), false);
     }
 
     /**

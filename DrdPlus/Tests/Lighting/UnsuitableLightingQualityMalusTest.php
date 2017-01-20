@@ -10,6 +10,7 @@ use DrdPlus\Lighting\Partials\WithInsufficientLightingBonus;
 use DrdPlus\Lighting\UnsuitableLightingQualityMalus;
 use DrdPlus\Tables\Races\RacesTable;
 use DrdPlus\Tables\Races\SightRangesTable;
+use DrdPlus\Tables\Tables;
 use Granam\Tests\Tools\TestWithMockery;
 
 class UnsuitableLightingQualityMalusTest extends TestWithMockery
@@ -41,7 +42,7 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
             $this->createDuskSight($duskSightBonus),
             $raceCode = RaceCode::getIt($raceValue),
             $subRaceCode = $this->createSubRaceCode(),
-            $this->createRacesTable($raceCode, $subRaceCode, $hasInfravision),
+            $this->createTablesWithRacesTable($raceCode, $subRaceCode, $hasInfravision),
             $situationAllowsUseOfInfravision
         );
         self::assertSame($expectedMalus, $unsuitableLightingQualityMalus->getValue());
@@ -118,16 +119,18 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
      * @param RaceCode $raceCode
      * @param SubRaceCode $subRaceCode
      * @param $hasInfravision
-     * @return \Mockery\MockInterface|RacesTable
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createRacesTable(RaceCode $raceCode, SubRaceCode $subRaceCode, $hasInfravision)
+    private function createTablesWithRacesTable(RaceCode $raceCode, SubRaceCode $subRaceCode, $hasInfravision)
     {
-        $racesTable = $this->mockery(RacesTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getRacesTable')
+            ->andReturn($racesTable = $this->mockery(RacesTable::class));
         $racesTable->shouldReceive('hasInfravision')
             ->with($raceCode, $subRaceCode)
             ->andReturn($hasInfravision);
 
-        return $racesTable;
+        return $tables;
     }
 
     /**
@@ -162,8 +165,7 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
             $this->createDuskSight($duskSightBonus),
             $raceCode = RaceCode::getIt($raceValue),
             $subRaceCode = $this->createSubRaceCode(),
-            $this->createSightRangesTable($raceCode, $raceAdaptability),
-            $this->createRacesTable($raceCode, $subRaceCode, $hasInfravision),
+            $this->createTables($raceCode, $raceAdaptability, $subRaceCode, $hasInfravision),
             $situationAllowsUseOfInfravision
         );
         self::assertSame($expectedMalus, $unsuitableLightingQualityMalus->getValue());
@@ -222,15 +224,24 @@ class UnsuitableLightingQualityMalusTest extends TestWithMockery
     /**
      * @param RaceCode $raceCode
      * @param int $raceAdaptability
-     * @return \Mockery\MockInterface|SightRangesTable
+     * @param SubRaceCode $subRaceCode
+     * @param $hasInfravision
+     * @return \Mockery\MockInterface|Tables
      */
-    private function createSightRangesTable(RaceCode $raceCode, $raceAdaptability)
+    private function createTables(RaceCode $raceCode, $raceAdaptability, SubRaceCode $subRaceCode, $hasInfravision)
     {
-        $sightRangesTable = $this->mockery(SightRangesTable::class);
+        $tables = $this->mockery(Tables::class);
+        $tables->shouldReceive('getSightRangesTable')
+            ->andReturn($sightRangesTable = $this->mockery(SightRangesTable::class));
         $sightRangesTable->shouldReceive('getAdaptability')
             ->with($raceCode)
             ->andReturn($raceAdaptability);
+        $tables->shouldReceive('getRacesTable')
+            ->andReturn($racesTable = $this->mockery(RacesTable::class));
+        $racesTable->shouldReceive('hasInfravision')
+            ->with($raceCode, $subRaceCode)
+            ->andReturn($hasInfravision);
 
-        return $sightRangesTable;
+        return $tables;
     }
 }
