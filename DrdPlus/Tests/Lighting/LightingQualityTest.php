@@ -3,8 +3,9 @@ namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Lighting\Partials\LightingQualityInterface;
+use PHPUnit\Framework\TestCase;
 
-class LightingQualityTest extends \PHPUnit_Framework_TestCase
+class LightingQualityTest extends TestCase
 {
     /**
      * @test
