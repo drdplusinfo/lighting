@@ -1,7 +1,7 @@
 <?php
 namespace DrdPlus\Tests\Lighting;
 
-use DrdPlus\Codes\DistanceCode;
+use DrdPlus\Codes\DistanceUnitCode;
 use DrdPlus\Lighting\Opacity;
 use DrdPlus\Tables\Measurements\Amount\Amount;
 use DrdPlus\Tables\Measurements\Amount\AmountBonus;
@@ -25,7 +25,7 @@ class OpacityTest extends TestWithMockery
     {
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject($density),
-            new Distance($distanceInMeters, DistanceCode::METER, new DistanceTable()),
+            new Distance($distanceInMeters, DistanceUnitCode::METER, new DistanceTable()),
             Tables::getIt()
         );
         self::assertSame($expectedOpacity, $opacity->getValue());
@@ -59,7 +59,7 @@ class OpacityTest extends TestWithMockery
         for ($attempt = 1; $attempt < 100; $attempt++) {
             $opacity = Opacity::createFromBarrierDensity(
                 new IntegerObject(-10),
-                new Distance(1, DistanceCode::METER, new DistanceTable()),
+                new Distance(1, DistanceUnitCode::METER, new DistanceTable()),
                 Tables::getIt()
             );
             if ($opacity->getValue() === 0) {
@@ -78,13 +78,13 @@ class OpacityTest extends TestWithMockery
     {
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject(-80),
-            new Distance(10, DistanceCode::METER, new DistanceTable()),
+            new Distance(10, DistanceUnitCode::METER, new DistanceTable()),
             Tables::getIt()
         );
         self::assertSame(0, $opacity->getValue());
         $opacity = Opacity::createFromBarrierDensity(
             new IntegerObject(-21),
-            new Distance(0.1, DistanceCode::METER, new DistanceTable()),
+            new Distance(0.1, DistanceUnitCode::METER, new DistanceTable()),
             Tables::getIt()
         );
         self::assertSame(0, $opacity->getValue());
@@ -100,7 +100,7 @@ class OpacityTest extends TestWithMockery
 
         $negativeOpacity = Opacity::createFromBarrierDensity(
             new IntegerObject(123),
-            new Distance(1, DistanceCode::METER, new DistanceTable()),
+            new Distance(1, DistanceUnitCode::METER, new DistanceTable()),
             $this->createTablesWithAmountTable(-1)
         );
         self::assertLessThan(0, $negativeOpacity->getValue());
@@ -108,7 +108,7 @@ class OpacityTest extends TestWithMockery
 
         $positiveOpacity = Opacity::createFromBarrierDensity(
             new IntegerObject(10),
-            new Distance(5, DistanceCode::METER, new DistanceTable()),
+            new Distance(5, DistanceUnitCode::METER, new DistanceTable()),
             Tables::getIt()
         );
         self::assertGreaterThan(0, $positiveOpacity->getValue());
