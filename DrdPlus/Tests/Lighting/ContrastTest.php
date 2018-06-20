@@ -18,7 +18,11 @@ class ContrastTest extends TestWithMockery
      * @param int $currentLightIntensityValue
      * @param int $expectedContrast
      */
-    public function I_can_create_it_by_simplified_rules($previousLightIntensityValue, $currentLightIntensityValue, $expectedContrast)
+    public function I_can_create_it_by_simplified_rules(
+        int $previousLightIntensityValue,
+        int $currentLightIntensityValue,
+        int $expectedContrast
+    ): void
     {
         $contrast = Contrast::createBySimplifiedRules(
             new LightingQuality($previousLightIntensityValue),
@@ -37,7 +41,7 @@ class ContrastTest extends TestWithMockery
         self::assertSame($previousLightIntensityValue < $currentLightIntensityValue, $contrast->isFromDarkToLight());
     }
 
-    public function providePreviousAndCurrentLightIntensity()
+    public function providePreviousAndCurrentLightIntensity(): array
     {
         return [
             [-123, 345, 47],
@@ -54,7 +58,12 @@ class ContrastTest extends TestWithMockery
      * @param int $adaptability
      * @param int $expectedContrast
      */
-    public function I_can_create_it_by_extended_rules($eyeAdaptationValue, $currentLightIntensityValue, $adaptability, $expectedContrast)
+    public function I_can_create_it_by_extended_rules(
+        int $eyeAdaptationValue,
+        int $currentLightIntensityValue,
+        int $adaptability,
+        int $expectedContrast
+    ): void
     {
         $contrast = Contrast::createByExtendedRules(
             $this->createEyeAdaptation($eyeAdaptationValue),
@@ -75,7 +84,7 @@ class ContrastTest extends TestWithMockery
         self::assertSame($eyeAdaptationValue < $currentLightIntensityValue, $contrast->isFromDarkToLight());
     }
 
-    public function provideAdaptationCurrentLightIntensityAndAdaptability()
+    public function provideAdaptationCurrentLightIntensityAndAdaptability(): array
     {
         return [
             [-123, 345, 10, 47],
@@ -93,7 +102,7 @@ class ContrastTest extends TestWithMockery
     private function createEyeAdaptation($value)
     {
         $eyeAdaptation = $this->mockery(EyesAdaptation::class);
-        $eyeAdaptation->shouldReceive('getValue')
+        $eyeAdaptation->expects('getValue')
             ->andReturn($value);
 
         return $eyeAdaptation;
@@ -109,15 +118,15 @@ class ContrastTest extends TestWithMockery
 
     /**
      * @param RaceCode $raceCode
-     * @param $adaptability
+     * @param int $adaptability
      * @return \Mockery\MockInterface|Tables
      */
-    private function createTablesWithSightRangesTable(RaceCode $raceCode, $adaptability)
+    private function createTablesWithSightRangesTable(RaceCode $raceCode, int $adaptability)
     {
         $tables = $this->mockery(Tables::class);
         $tables->shouldReceive('getSightRangesTable')
             ->andReturn($sightRangesTable = $this->mockery(SightRangesTable::class));
-        $sightRangesTable->shouldReceive('getAdaptability')
+        $sightRangesTable->expects('getAdaptability')
             ->with($raceCode)
             ->andReturn($adaptability);
 
