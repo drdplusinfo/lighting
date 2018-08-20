@@ -1,5 +1,5 @@
 {
-  "name": "drd-plus/lighting",
+  "name": "drdplus/lighting",
   "license": "MIT",
   "type": "library",
   "description": "Effects of insufficient lighting or to bright light for Drd+",
@@ -12,9 +12,9 @@
     "php": ">=7.1",
     "granam/strict-object": "^3.0",
     "granam/integer": "^6.1",
-    "drd-plus/calculations": "^1.0",
-    "drd-plus/tables": "^1.0",
-    "drd-plus/rolls-on": "^1.0"
+    "drdplus/calculations": "^1.0",
+    "drdplus/tables": "^1.0",
+    "drdplus/rolls-on": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
