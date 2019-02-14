@@ -20,13 +20,6 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
      */
     private $value;
 
-    /**
-     * @param LightingQuality $previousLightingQuality
-     * @param LightingQuality $currentLightingQuality
-     * @param RaceCode $raceCode
-     * @param Tables $tables
-     * @param PositiveInteger $roundsOfAdaptation
-     */
     public function __construct(
         LightingQuality $previousLightingQuality,
         LightingQuality $currentLightingQuality,

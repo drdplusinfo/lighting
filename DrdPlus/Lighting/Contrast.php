@@ -30,7 +30,7 @@ class Contrast extends StrictObject implements PositiveInteger
     {
         $difference = $previousLightingQuality->getValue() - $currentLightingQuality->getValue();
 
-        return new self($difference, 10, true);
+        return new static($difference, 10);
     }
 
     public static function createByExtendedRules(
@@ -42,18 +42,13 @@ class Contrast extends StrictObject implements PositiveInteger
     {
         $difference = $eyesAdaptation->getValue() - $currentLightingQuality->getValue();
 
-        return new self($difference, $tables->getSightRangesTable()->getAdaptability($raceCode), false);
+        return new static($difference, $tables->getSightRangesTable()->getAdaptability($raceCode));
     }
 
-    /**
-     * @param int $lightsDifference
-     * @param int $eyeAdaptability
-     * @param bool $roundForSimplifiedRules
-     */
-    private function __construct($lightsDifference, $eyeAdaptability, $roundForSimplifiedRules)
+    private function __construct(int $lightsDifference, int $eyeAdaptability)
     {
         $this->fromLightToDark = $lightsDifference > 0;
-        $base = abs($lightsDifference) / $eyeAdaptability;
+        $base = \abs($lightsDifference) / $eyeAdaptability;
         /** note: it differs for simplified rules rounding by floor
          * (PPH page 128 left column, @link https://pph.drdplus.jaroslavtyc.com/#oslneni)
          * but standard rounding fits to extended rules and is more generic in DrD+ so it has been unified here
