@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -27,10 +27,7 @@ class LightingQuality extends StrictObject implements Partials\LightingQualityIn
         $this->value = ToInteger::toInteger($value);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }

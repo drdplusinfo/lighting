@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -17,31 +17,19 @@ class SpotLightingQuality extends StrictObject implements Partials\LightingQuali
      */
     private $value;
 
-    /**
-     * @param LightingQuality $surroundingLightingQuality
-     * @return SpotLightingQuality
-     */
-    public static function createForVeryDarkItem(LightingQuality $surroundingLightingQuality)
+    public static function createForVeryDarkItem(LightingQuality $surroundingLightingQuality): SpotLightingQuality
     {
-        return new self($surroundingLightingQuality->getValue() - 20);
+        return new static($surroundingLightingQuality->getValue() - 20);
     }
 
-    /**
-     * @param LightingQuality $surroundingLightingQuality
-     * @return SpotLightingQuality
-     */
-    public static function createForBrightWhiteItem(LightingQuality $surroundingLightingQuality)
+    public static function createForBrightWhiteItem(LightingQuality $surroundingLightingQuality): SpotLightingQuality
     {
-        return new self($surroundingLightingQuality->getValue() + 20);
+        return new static($surroundingLightingQuality->getValue() + 20);
     }
 
-    /**
-     * @param LightingQuality $surroundingLightingQuality
-     * @return SpotLightingQuality
-     */
-    public static function createForLightSource(LightingQuality $surroundingLightingQuality)
+    public static function createForLightSource(LightingQuality $surroundingLightingQuality): SpotLightingQuality
     {
-        return new self($surroundingLightingQuality->getValue() + 30);
+        return new static($surroundingLightingQuality->getValue() + 30);
     }
 
     /**
@@ -49,14 +37,10 @@ class SpotLightingQuality extends StrictObject implements Partials\LightingQuali
      */
     private function __construct($value)
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->value = ToInteger::toInteger($value);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }

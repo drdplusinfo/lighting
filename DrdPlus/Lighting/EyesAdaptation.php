@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -58,7 +58,7 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
         RaceCode $raceCode,
         Tables $tables,
         PositiveInteger $roundsOfAdaptation
-    )
+    ): int
     {
         $sightRangesTable = $tables->getSightRangesTable();
         $maximalLighting = $sightRangesTable->getMaximalLighting($raceCode);
@@ -66,7 +66,7 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
         $previousLighting = $previousLightingQuality->getValue();
         if ($previousLighting < $minimalLighting) {
             $previousLighting = $minimalLighting;
-        } else if ($previousLighting > $maximalLighting) {
+        } elseif ($previousLighting > $maximalLighting) {
             $previousLighting = $maximalLighting;
         }
         $currentLighting = $currentLightingQuality->getValue();
@@ -96,10 +96,7 @@ class EyesAdaptation extends StrictObject implements LightingQualityInterface
         return SumAndRound::floor($effectiveRoundsOfAdaptation / 10); // needs ten rounds for one point of difference if came to lighter place
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -21,17 +21,11 @@ class Opacity extends StrictObject implements PositiveInteger
      */
     private $value;
 
-    /**
-     * @param IntegerInterface $barrierDensity
-     * @param Distance $barrierLength
-     * @param Tables $tables
-     * @return Opacity
-     */
     public static function createFromBarrierDensity(
         IntegerInterface $barrierDensity,
         Distance $barrierLength,
         Tables $tables
-    )
+    ): Opacity
     {
         $amountBonusValue = $barrierDensity->getValue() + $barrierLength->getBonus()->getValue();
         if ($amountBonusValue < -20) { // workaround to avoid unexpected amount bonus value
@@ -41,12 +35,9 @@ class Opacity extends StrictObject implements PositiveInteger
         return new self((new AmountBonus($amountBonusValue, $tables->getAmountTable()))->getAmount()->getValue());
     }
 
-    /**
-     * @return Opacity
-     */
-    public static function createTransparent()
+    public static function createTransparent(): Opacity
     {
-        return new self(0);
+        return new static(0);
     }
 
     /**
@@ -54,14 +45,10 @@ class Opacity extends StrictObject implements PositiveInteger
      */
     private function __construct($value)
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $this->value = ToInteger::toInteger($value);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
@@ -74,15 +61,11 @@ class Opacity extends StrictObject implements PositiveInteger
         return (string)$this->getValue();
     }
 
-    /**
-     * @return int
-     */
-    public function getVisibilityMalus()
+    public function getVisibilityMalus(): int
     {
         if ($this->getValue() > 0) {
             return -$this->getValue();
         }
-
         return 0;
     }
 

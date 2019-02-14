@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -49,23 +49,17 @@ class Glare extends StrictObject
      *
      * @return int
      */
-    public function getMalus()
+    public function getMalus(): int
     {
         return $this->malus;
     }
 
-    /**
-     * @return bool
-     */
-    public function isShined()
+    public function isShined(): bool
     {
         return $this->shined && $this->getMalus() !== 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBlinded()
+    public function isBlinded(): bool
     {
         return !$this->isShined() && $this->getMalus() !== 0;
     }

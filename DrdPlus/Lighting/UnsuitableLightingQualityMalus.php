@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace DrdPlus\Lighting;
 
@@ -20,17 +20,6 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
      */
     private $malus;
 
-    /**
-     * @param EyesAdaptation $eyesAdaptation
-     * @param LightingQuality $currentLightingQuality
-     * @param Opacity $barrierOpacity
-     * @param WithInsufficientLightingBonus $duskSightBonus
-     * @param RaceCode $raceCode
-     * @param SubRaceCode $subRaceCode
-     * @param Tables $tables
-     * @param $situationAllowsUseOfInfravision
-     * @return UnsuitableLightingQualityMalus
-     */
     public static function createWithEyesAdaptation(
         EyesAdaptation $eyesAdaptation,
         LightingQuality $currentLightingQuality,
@@ -39,17 +28,16 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
         Tables $tables,
-        $situationAllowsUseOfInfravision
-    )
+        bool $situationAllowsUseOfInfravision
+    ): UnsuitableLightingQualityMalus
     {
         if ($barrierOpacity->getValue() > 0) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
         }
         $contrast = Contrast::createByExtendedRules($eyesAdaptation, $currentLightingQuality, $raceCode, $tables);
         $possibleBaseMalus = -$contrast->getValue();
 
-        return new self(
+        return new static(
             $possibleBaseMalus,
             $currentLightingQuality,
             $duskSightBonus,
@@ -60,16 +48,6 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         );
     }
 
-    /**
-     * @param LightingQuality $currentLightingQuality
-     * @param WithInsufficientLightingBonus $duskSightBonus
-     * @param Opacity $barrierOpacity
-     * @param RaceCode $raceCode
-     * @param SubRaceCode $subRaceCode
-     * @param Tables $tables
-     * @param $situationAllowsUseOfInfravision
-     * @return UnsuitableLightingQualityMalus
-     */
     public static function createWithSimplifiedRules(
         LightingQuality $currentLightingQuality,
         Opacity $barrierOpacity,
@@ -77,30 +55,28 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
         Tables $tables,
-        $situationAllowsUseOfInfravision
-    )
+        bool $situationAllowsUseOfInfravision
+    ): UnsuitableLightingQualityMalus
     {
         $possibleMalus = 0;
         if ($barrierOpacity->getValue() > 0) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $currentLightingQuality = new LightingQuality($currentLightingQuality->getValue() - $barrierOpacity->getValue());
         }
         /** see PPH page 128 right column bottom, @link https://pph.drdplus.jaroslavtyc.com/#postihy_za_nedostatecne_svetlo */
         if ($currentLightingQuality->getValue() < -10) {
-            /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
             $contrast = Contrast::createBySimplifiedRules(new LightingQuality(0), $currentLightingQuality);
             $possibleMalus = -$contrast->getValue();
             if (in_array($raceCode->getValue(), [RaceCode::DWARF, RaceCode::ORC], true)) {
                 $possibleMalus += 4; // lowering malus
-            } else if ($raceCode->getValue() === RaceCode::KROLL) {
+            } elseif ($raceCode->getValue() === RaceCode::KROLL) {
                 $possibleMalus += 2; // lowering malus
             }
-        } else if ($currentLightingQuality->getValue() >= 60 /* strong daylight */ && $raceCode->getValue() === RaceCode::ORC) {
+        } elseif ($currentLightingQuality->getValue() >= 60 /* strong daylight */ && $raceCode->getValue() === RaceCode::ORC) {
             /** see PPH page 128 right column bottom, @link https://pph.drdplus.jaroslavtyc.com/#postih_skretu_za_ostreho_denniho_svetla */
             $possibleMalus = -2;
         }
 
-        return new self(
+        return new static(
             $possibleMalus,
             $currentLightingQuality,
             $duskSightBonus,
@@ -111,20 +87,11 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         );
     }
 
-    /**
-     * @param $possibleBaseMalus
-     * @param LightingQuality $currentLightingQuality
-     * @param WithInsufficientLightingBonus $duskSightBonus
-     * @param $situationAllowsUseOfInfravision
-     * @param RaceCode $raceCode
-     * @param SubRaceCode $subRaceCode
-     * @param Tables $tables
-     */
     private function __construct(
-        $possibleBaseMalus,
+        int $possibleBaseMalus,
         LightingQuality $currentLightingQuality,
         WithInsufficientLightingBonus $duskSightBonus,
-        $situationAllowsUseOfInfravision,
+        bool $situationAllowsUseOfInfravision,
         RaceCode $raceCode,
         SubRaceCode $subRaceCode,
         Tables $tables
@@ -151,10 +118,7 @@ class UnsuitableLightingQualityMalus extends StrictObject implements NegativeInt
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->malus;
     }
