@@ -11,10 +11,7 @@ use Granam\Strict\Object\StrictObject;
  */
 class LightingQuality extends StrictObject implements Partials\LightingQualityInterface
 {
-    /**
-     * @var int
-     */
-    private $value;
+    private int $value;
 
     /**
      * @param int|IntegerInterface $value

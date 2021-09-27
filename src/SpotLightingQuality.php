@@ -11,10 +11,7 @@ use Granam\Strict\Object\StrictObject;
  */
 class SpotLightingQuality extends StrictObject implements Partials\LightingQualityInterface
 {
-    /**
-     * @var int
-     */
-    private $value;
+    private int $value;
 
     public static function createForVeryDarkItem(LightingQuality $surroundingLightingQuality): SpotLightingQuality
     {

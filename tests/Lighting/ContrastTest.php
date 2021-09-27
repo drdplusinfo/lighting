@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-declare(strict_types = 1);
-
 namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Codes\RaceCode;
@@ -10,7 +8,7 @@ use DrdPlus\Lighting\EyesAdaptation;
 use DrdPlus\Lighting\LightingQuality;
 use DrdPlus\Tables\Races\SightRangesTable;
 use DrdPlus\Tables\Tables;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class ContrastTest extends TestWithMockery
 {

@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
 
-declare(strict_types = 1);
-
 namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Codes\Units\DistanceUnitCode;
@@ -13,7 +11,7 @@ use DrdPlus\Tables\Measurements\Distance\Distance;
 use DrdPlus\Tables\Measurements\Distance\DistanceTable;
 use DrdPlus\Tables\Tables;
 use Granam\Integer\IntegerObject;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class OpacityTest extends TestWithMockery
 {

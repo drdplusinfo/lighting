@@ -14,10 +14,7 @@ class Glare extends StrictObject
      * @var int
      */
     private $malus;
-    /**
-     * @var bool
-     */
-    private $shined;
+    private bool $shined;
 
     /**
      * @param Contrast $contrast

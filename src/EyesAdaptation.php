@@ -14,10 +14,7 @@ use Granam\Strict\Object\StrictObject;
  */
 class EyesAdaptation extends StrictObject implements LightingQualityInterface
 {
-    /**
-     * @var int
-     */
-    private $value;
+    private int $value;
 
     public function __construct(
         LightingQuality $previousLightingQuality,

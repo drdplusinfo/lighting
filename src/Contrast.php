@@ -13,14 +13,8 @@ use Granam\Strict\Object\StrictObject;
  */
 class Contrast extends StrictObject implements PositiveInteger
 {
-    /**
-     * @var int
-     */
-    private $value;
-    /**
-     * @var bool
-     */
-    private $fromLightToDark;
+    private int $value;
+    private bool $fromLightToDark;
 
     public static function createBySimplifiedRules(
         LightingQuality $previousLightingQuality,

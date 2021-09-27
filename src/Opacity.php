@@ -15,10 +15,7 @@ use Granam\Strict\Object\StrictObject;
  */
 class Opacity extends StrictObject implements PositiveInteger
 {
-    /**
-     * @var int
-     */
-    private $value;
+    private int $value;
 
     public static function createFromBarrierDensity(
         IntegerInterface $barrierDensity,

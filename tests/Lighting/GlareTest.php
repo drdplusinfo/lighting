@@ -1,13 +1,11 @@
 <?php declare(strict_types=1);
 
-declare(strict_types = 1);
-
 namespace DrdPlus\Tests\Lighting;
 
 use DrdPlus\Lighting\Contrast;
 use DrdPlus\Lighting\Glare;
 use DrdPlus\RollsOn\Traps\RollOnSenses;
-use Granam\Tests\Tools\TestWithMockery;
+use Granam\TestWithMockery\TestWithMockery;
 
 class GlareTest extends TestWithMockery
 {
